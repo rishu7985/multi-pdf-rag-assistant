@@ -1,5 +1,10 @@
-.env
 __pycache__/
-*.pyc
+.venv/
+.env
+
 faiss_index.bin
 chunks.pkl
+
+data/
+
+*.pyc
