@@ -17,6 +17,10 @@ tokenized_chunks = None
 # ---------------- ENV ----------------
 load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
+if not os.getenv("GOOGLE_API_KEY"):
+    st.error("Google API Key not found. Please configure it before using the application.")
+    st.stop()
+
 genai.configure(api_key=API_KEY)
 
 # ---------------- MODELS ----------------
@@ -195,8 +199,8 @@ def ask_rag(query, history=None, k=5, selected_pdfs=None, streaming=False):
 
     retrieved_chunks = candidates[:k]
 
-
     if len(retrieved_chunks) == 0:
+        st.warning("No relevant information was found in the selected documents.")
         return {
             "answer": "No relevant information found.",
             "pages": [],
