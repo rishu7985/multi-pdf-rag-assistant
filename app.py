@@ -12,14 +12,20 @@ load_pdfs,chunk_documents,generate_embeddings,
 build_faiss_index,save_index
 )
 
-def get_page_image(pdf_path,page_number):
-    doc = fitz.open(pdf_path)
-    page = doc.load_page(page_number)
-    pix = page.get_pixmap(matrix=fitz.Matrix(2,2))
-    img_bytes = pix.tobytes("png")
-    image = Image.open(io.BytesIO(img_bytes))
-    doc.close()
-    return image
+def get_page_image(pdf_path, page_number):
+    try:
+        doc = fitz.open(pdf_path)
+        page = doc.load_page(page_number)
+        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+
+        img_bytes = pix.tobytes("png")
+        image = Image.open(io.BytesIO(img_bytes))
+
+        doc.close()
+        return image
+
+    except Exception:
+        return None
 
 if "selected_page" not in st.session_state:
     st.session_state.selected_page = []
@@ -289,3 +295,9 @@ if st.button("Search", disabled=not index_exists):
                     caption = f"{file}-Page{page+1}",
                     use_container_width = True
                 )
+
+st.divider()
+
+st.caption(
+    "Built using Streamlit • FAISS • BM25 • Sentence Transformers • Google Gemini 2.5 Flash"
+)
